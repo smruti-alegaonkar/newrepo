@@ -5,6 +5,7 @@ pipeline {
         REPO_URL = 'https://github.com/smruti-alegaonkar/newrepo.git'
         BRANCH_NAME = 'main'
         IMAGE_NAME = 'smrutia/dockerpython:latest'
+        VENV_PATH = '.venv'
     }
 
     stages {
@@ -17,11 +18,15 @@ pipeline {
 
         stage('Setup Environment') {
             steps {
-                echo '⚙️ Setting up Python environment...'
+                echo '⚙️ Creating Python virtual environment...'
                 sh '''
-                python3 -m pip install --upgrade pip
+                apt-get update -y
+                apt-get install -y python3-venv
+                python3 -m venv ${VENV_PATH}
+                . ${VENV_PATH}/bin/activate
+                pip install --upgrade pip
                 if [ -f requirements.txt ]; then
-                    python3 -m pip install -r requirements.txt
+                    pip install -r requirements.txt
                 else
                     echo "No requirements.txt found, skipping..."
                 fi
@@ -33,8 +38,9 @@ pipeline {
             steps {
                 echo '🧪 Running tests...'
                 sh '''
+                . ${VENV_PATH}/bin/activate
                 if command -v pytest >/dev/null 2>&1; then
-                    python3 -m pytest || true
+                    pytest || true
                 else
                     echo "pytest not found, skipping tests"
                 fi
