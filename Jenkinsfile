@@ -16,12 +16,10 @@ pipeline {
 
         stage('Setup Environment') {
             steps {
-                echo "⚙️ Creating Python virtual environment..."
+                echo "⚙️ Installing Python dependencies (without venv)..."
                 sh '''
-                    python3 -m venv venv
-                    . venv/bin/activate
-                    pip install --upgrade pip
-                    pip install pytest
+                    python3 -m pip install --user --upgrade pip
+                    python3 -m pip install --user pytest
                 '''
             }
         }
@@ -30,8 +28,7 @@ pipeline {
             steps {
                 echo "🧪 Running tests..."
                 sh '''
-                    . venv/bin/activate
-                    pytest || echo "No tests found or failed!"
+                    python3 -m pytest || echo "No tests found or failed!"
                 '''
             }
         }
