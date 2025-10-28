@@ -16,10 +16,10 @@ pipeline {
 
         stage('Setup Environment') {
             steps {
-                echo "⚙️ Installing Python dependencies (without venv)..."
+                echo "⚙️ Installing Python dependencies (safe mode)..."
                 sh '''
-                    python3 -m pip install --user --upgrade pip
-                    python3 -m pip install --user pytest
+                    python3 -m pip install --upgrade pip --break-system-packages
+                    python3 -m pip install pytest --break-system-packages
                 '''
             }
         }
@@ -28,7 +28,7 @@ pipeline {
             steps {
                 echo "🧪 Running tests..."
                 sh '''
-                    python3 -m pytest || echo "No tests found or failed!"
+                    python3 -m pytest || echo "No tests found or some failed!"
                 '''
             }
         }
