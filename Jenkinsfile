@@ -1,21 +1,22 @@
 pipeline {
-  agent any
-  stages {
-    stage('Checkout') {
-      steps {
-        checkout scm
-      }
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/smruti-alegaonkar/newrepo.git'
+            }
+        }
+        stage('Setup') {
+            steps {
+                sh 'python3 -m pip install --upgrade pip'
+                sh 'python3 -m pip install -r requirements.txt || true'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'python3 -m pytest || true'
+            }
+        }
     }
-    stage('Setup') {
-      steps {
-        sh 'python -m pip install --upgrade pip || true'
-        sh 'python -m pip install -r requirements.txt || true'
-      }
-    }
-    stage('Test') {
-      steps {
-        sh 'python -m pytest || true'
-      }
-    }
-  }
 }
