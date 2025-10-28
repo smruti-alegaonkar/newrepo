@@ -1,0 +1,10 @@
+﻿# Ignore virtual env, cache, and system files
+venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+node_modules/
+dist/
+build/
+*.log
